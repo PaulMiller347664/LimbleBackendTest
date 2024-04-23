@@ -3,7 +3,7 @@ export async function getTotalCostOfWorkerOrLocation(connection, worker_ids, loc
 {
     console.log(`calculating cost of ${groupOn == groupByEnum.WORKER? 'workers': 'locations'} for ids ${worker_ids}, at locations ${location_ids}, and tasks are ${is_complete == null? 'unfiltered': `filtered on tasks complete == ${is_complete} `}`);
     
-    //these 3 variables go in the where clause of the variable
+    //these 3 variables go in the where clause of the query
     let completionCondition = '';
     let workerCondition = '';
     let locationCondition = '';
@@ -52,7 +52,8 @@ export async function getTotalCostOfWorkerOrLocation(connection, worker_ids, loc
     if(result[0] === undefined)
     {
         //nothing was found based on the parameters
-        throw `no worker(s) found for worker id(s) ${worker_ids} or location id(s) ${location_ids}`;
+        console.log(`no worker(s) found for worker id(s) ${worker_ids} or location id(s) ${location_ids} on tasks ${is_complete == null? 'unfiltered': `filtered on tasks complete == ${is_complete} `}`);
+        return {total_cost: 0};
     }
 
     console.log(`total cost has been calculated for worker ids ${worker_ids} and location ids ${location_ids} using query ${query}`)

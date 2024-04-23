@@ -1,7 +1,7 @@
 import express from "express";
 import * as mariadb from "mariadb";
 import {buildTestData} from "./testCases/testData.js"
-import {getTotalCostOfWorkerOrLocation} from "./worker/worker.js"
+import {getTotalCostOfWorkerOrLocation} from "./pieChartSearcher/pieChartQuery.js"
 import { groupByEnum } from "./enums/groupByEnums.js";
 const app = express();
 const port = 3000;
@@ -92,11 +92,13 @@ async function main() {
 }
 
 await main();
-function ValidateAndSetInputs(req, worker_ids, location_ids, groupBy) {
+export function ValidateAndSetInputs(req, worker_ids, location_ids, groupBy) {
   console.log(`validating worker ids and location ids`);
+  
   if (req.query.locationIds === undefined && req.query.workerIds === undefined) {
     throw 'location and workers cannot both be null';
   }
+
   if(req.query.locationIds === undefined && groupBy == groupByEnum.LOCATION)
   {
     throw 'cannot search by location without location ids please retry'
