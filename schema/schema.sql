@@ -8,7 +8,6 @@ CREATE TABLE tasks (
   description VARCHAR(100) NOT NULL,
 
   location_id INT(11) NOT NULL,
-
   FOREIGN KEY(location_id) REFERENCES locations(id) ON DELETE CASCADE
 ) ENGINE=INNODB;
 
@@ -28,3 +27,7 @@ CREATE TABLE logged_time (
   FOREIGN KEY(task_id) REFERENCES tasks(id) ON DELETE CASCADE,
   FOREIGN KEY(worker_id) REFERENCES workers(id) ON DELETE CASCADE
 ) ENGINE=INNODB;
+
+ALTER TABLE tasks ADD COLUMN (
+isComplete BOOLEAN NOT NULL default 1
+)
