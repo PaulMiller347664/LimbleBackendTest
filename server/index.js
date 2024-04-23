@@ -24,9 +24,9 @@ async function getPool() {
 async function main() {
   getPool();
   //populating test data. Only need to run once.
-  let connection = await pool.getConnection();
-  buildTestData(connection);
-  await connection.end
+  // let connection = await pool.getConnection();
+  // buildTestData(connection);
+  // await connection.end
   app.get("/workers/totalCost", async (req, res) => {
     let worker_ids = null;
     let location_ids = null;
@@ -77,7 +77,7 @@ async function main() {
   });
 
   //test method used for testing verification, not in the final product
-  app.get("/", async (res) => {
+  app.get("/", async (req,res) => {
     let connection = await pool.getConnection();
     let query = `
         SELECT
