@@ -52,8 +52,8 @@ export async function getTotalCostOfWorkerOrLocation(connection, worker_ids, loc
     if(result[0] === undefined)
     {
         //nothing was found based on the parameters
-        console.log(`no worker(s) found for worker id(s) ${worker_ids} or location id(s) ${location_ids} on tasks ${is_complete == null? 'unfiltered': `filtered on tasks complete == ${is_complete} `}`);
-        return {total_cost: 0};
+        console.log(`no worker(s) found for worker id(s) ${worker_ids} or location id(s) ${location_ids} on task ${is_complete == null? 'unfiltered': `filtered on tasks complete == ${is_complete} `}`);
+        return {code: 404, error: `no worker(s) found for worker id(s) ${worker_ids} or location id(s) ${location_ids} on task ${is_complete == null? 'unfiltered': `filtered on tasks complete == ${is_complete} `}` };
     }
 
     console.log(`total cost has been calculated for worker ids ${worker_ids} and location ids ${location_ids} using query ${query}`)

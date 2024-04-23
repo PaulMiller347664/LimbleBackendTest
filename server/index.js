@@ -24,9 +24,9 @@ async function getPool() {
 async function main() {
   getPool();
   //populating test data. Only need to run once.
-  // let connection = await pool.getConnection();
-  // buildTestData(connection);
-  // await connection.end
+  let connection = await pool.getConnection();
+  buildTestData(connection);
+  await connection.end
   app.get("/workers/totalCost", async (req, res) => {
     let worker_ids = null;
     let location_ids = null;
@@ -35,12 +35,18 @@ async function main() {
       let isComplete;
       ({ isComplete, worker_ids, location_ids } = ValidateAndSetInputs(req, worker_ids, location_ids,groupByEnum.WORKER));
       let connection = await pool.getConnection();
-      res.json(await getTotalCostOfWorkerOrLocation(connection, worker_ids, location_ids, groupByEnum.WORKER, isComplete));
+      const result = await getTotalCostOfWorkerOrLocation(connection, worker_ids, location_ids, groupByEnum.WORKER, isComplete);
+      if('code' in result)
+      {
+        res.status(result['code']).json(result['error'])
+      }
+      res.json(result);
       await connection.end
   }
   catch(exception)
   {
-    //go to an error page
+    //something unexpected throw a 500
+    res.status(500).json(exception)
     console.error(exception);
   }
   });
@@ -54,18 +60,24 @@ async function main() {
       let isComplete;
       ({ isComplete, worker_ids, location_ids } = ValidateAndSetInputs(req, worker_ids, location_ids, groupByEnum.LOCATION));
       let connection = await pool.getConnection();
-      res.json(await getTotalCostOfWorkerOrLocation(connection, worker_ids, location_ids, groupByEnum.LOCATION, isComplete));
+      const result = await getTotalCostOfWorkerOrLocation(connection, worker_ids, location_ids, groupByEnum.LOCATION, isComplete);
+      if('code' in result)
+      {
+        res.status(result['code']).json(result['error'])
+      }
+      res.json(result);
       await connection.end
   }
   catch(exception)
   {
     //log an error, activate an alert, etc
+    res.status(500).json(exception)
     console.error(exception);
   }
   });
 
   //test method used for testing verification, not in the final product
-  app.get("/", async (req, res) => {
+  app.get("/", async (res) => {
     let connection = await pool.getConnection();
     let query = `
         SELECT
